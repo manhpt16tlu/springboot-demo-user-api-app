@@ -27,10 +27,10 @@ public class UserController {
     private UserMapper userMapper;
 
 
-//    @GetMapping(value = "/welcome")
-//    public ResponseEntity<String> welcome(){
-//        return new ResponseEntity<>("hello", HttpStatus.OK);
-//    }
+    @GetMapping(value = "/welcome")
+    public ResponseEntity<String> welcome(){
+        return new ResponseEntity<>("hello", HttpStatus.OK);
+    }
 
     @PostMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) throws Exception {

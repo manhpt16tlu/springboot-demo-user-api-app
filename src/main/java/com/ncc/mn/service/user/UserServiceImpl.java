@@ -6,12 +6,13 @@ import com.ncc.mn.exception.UserServiceException;
 import com.ncc.mn.mapper.UserMapper;
 import com.ncc.mn.model.ErrorMessage;
 import com.ncc.mn.repository.UserRepository;
-import com.ncc.mn.service.user.UserService;
 import com.ncc.mn.utils.GenerateString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -28,15 +29,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private GenerateString generateString;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User exist = userRepository.findByEmail(userDTO.getEmail());
         if (Objects.nonNull(exist)) throw new UserServiceException(ErrorMessage.RECORD_ALREADY_EXIST.getMessage());
         User user = userMapper.userDtoToUser(userDTO);
-        user.setEncpyptPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEncpyptPassword(userDTO.getPassword());
         user.setUserId(generateString.generate(48,57,4,"185106"));
         User createdUser = userRepository.save(user);
         UserDTO returnValue = userMapper.userToUserDto(createdUser);
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         //check null vs empty
         if (!StringUtils.isEmpty(userDTO.getFirstName())) exist.setFirstName(userDTO.getFirstName());
         if (!StringUtils.isEmpty(userDTO.getLastName())) exist.setLastName(userDTO.getLastName());
-        if (!StringUtils.isEmpty(userDTO.getPassword())) exist.setEncpyptPassword(passwordEncoder.encode(userDTO.getPassword()));
+        if (!StringUtils.isEmpty(userDTO.getPassword())) exist.setEncpyptPassword(userDTO.getPassword());
         User updatedUser = userRepository.save(exist);
         UserDTO returnValue = userMapper.userToUserDto(updatedUser);
         return returnValue;
