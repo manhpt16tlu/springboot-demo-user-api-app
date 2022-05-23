@@ -2,11 +2,17 @@ package com.ncc.mn.controller;
 
 import com.ncc.mn.dto.UserDTO;
 import com.ncc.mn.mapper.UserMapper;
+import com.ncc.mn.model.UserRequest;
+import com.ncc.mn.model.UserResponse;
 import com.ncc.mn.service.user.UserService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,6 +20,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = UserController.class)
+//@SpringBootTest
+//@AutoConfigureMockMvc
 class UserControllerTest {
 
     @Autowired
@@ -24,7 +32,6 @@ class UserControllerTest {
     private UserMapper userMapper;
 
     @Test
-//    @WithMockUser(username = "mn@gmail.com", password= "456")
     void shouldReturnHello() throws Exception {
         mockMvc
                 .perform(MockMvcRequestBuilders
@@ -34,11 +41,12 @@ class UserControllerTest {
     }
 
     @Test
-//    @WithMockUser(username = "mn@gmail.com",password = "456")
-    void createUserShouldReturnResponseValue() throws Exception {
-        UserDTO request = UserDTO.builder().firstName("a").lastName("b").email("c").password("d").build();
-        UserDTO response = UserDTO.builder().firstName("a").lastName("b").email("c").password("d").build();
+    void createUserShouldReturn() throws Exception {
+        UserDTO request = UserDTO.builder().firstName("manh").lastName("nguyen").email("mn@gmail.com").password("456").build();
+        UserDTO response = UserDTO.builder().firstName("manh").lastName("nguyen").email("mn@gmail.com").build();
         Mockito.when(userService.createUser(request)).thenReturn(response);
+        UserResponse createdUser = UserResponse.builder().email("mn@gmail.com").firstName("manh").lastName("nguyen").build();
+        Mockito.when(userMapper.userDtoToUserResponse(response)).thenReturn(createdUser);
         mockMvc.perform(
                 MockMvcRequestBuilders
                         .post("/api/user")
@@ -46,13 +54,11 @@ class UserControllerTest {
                         .content("{\n" +
                                 "    \"firstName\":\"manh\",\n" +
                                 "    \"lastName\":\"nguyen\",\n" +
-                                "    \"email\":\"mn7@gmail.com\",\n" +
+                                "    \"email\":\"mn@gmail.com\",\n" +
                                 "    \"password\":\"456\"\n" +
                                 "}")
                         .characterEncoding("utf-8")
-        ).andExpect(MockMvcResultMatchers.status().isOk());
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("manh"));
-
+        ).andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("manh"));
     }
 
 

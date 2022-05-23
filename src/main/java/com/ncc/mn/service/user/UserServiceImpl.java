@@ -20,16 +20,25 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+//    @Autowired
+//    private UserMapper userMapper;
+//
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private GenerateString generateString;
+
     private UserMapper userMapper;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private GenerateString generateString;
 
-//    @Autowired
+    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository, GenerateString generateString) {
+        this.userMapper = userMapper;
+        this.userRepository = userRepository;
+        this.generateString = generateString;
+    }
+    //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
     @Override
@@ -38,7 +47,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.nonNull(exist)) throw new UserServiceException(ErrorMessage.RECORD_ALREADY_EXIST.getMessage());
         User user = userMapper.userDtoToUser(userDTO);
         user.setEncpyptPassword(userDTO.getPassword());
-        user.setUserId(generateString.generate(48,57,4,"185106"));
+        user.setUserId(generateString.generate(48, 57, 4, "185106"));
         User createdUser = userRepository.save(user);
         UserDTO returnValue = userMapper.userToUserDto(createdUser);
         return returnValue;
@@ -46,8 +55,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
 //    @Cacheable(cacheNames = "allUserCache",condition = "#limit < 5") //cacheNames  == value
-    public Page<UserDTO> getAllUser(int page,int limit) {
-        Pageable pageable = PageRequest.of(page,limit, Sort.by(Sort.Direction.ASC,"firstName"));
+    public Page<UserDTO> getAllUser(int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "firstName"));
         Page<User> pageUser = userRepository.findAll(pageable);
         Page<UserDTO> returnValue = pageUser.map(userMapper::userToUserDto);
         return returnValue;
