@@ -26,29 +26,32 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+//    @GetMapping(value = "/hello")
+//    public ResponseEntity<String> hello(){
+//        return new ResponseEntity<>(null,HttpStatus.OK);
+//    }
 
-    @GetMapping(value = "/welcome")
-    public ResponseEntity<String> welcome(){
-        return new ResponseEntity<>("hello", HttpStatus.OK);
-    }
-
-    @PostMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) throws Exception {
-        if(StringUtils.isEmpty(userRequest.getEmail()) ||StringUtils.isEmpty(userRequest.getFirstName()) || StringUtils.isEmpty(userRequest.getPassword())) throw new UserServiceException( ErrorMessage.MISSING_REQUIRED_FIELD.getMessage());
+        if (StringUtils.isEmpty(userRequest.getEmail()) || StringUtils.isEmpty(userRequest.getFirstName()) || StringUtils.isEmpty(userRequest.getPassword()))
+            throw new UserServiceException(ErrorMessage.MISSING_REQUIRED_FIELD.getMessage());
         UserDTO userDTO = userMapper.userRequestToUserDTO(userRequest);
+
         UserDTO createdUser = userService.createUser(userDTO);
+
         UserResponse returnValue = userMapper.userDtoToUserResponse(createdUser);
-        return new ResponseEntity<>(returnValue,HttpStatus.CREATED);
+
+        return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Page<UserResponse> getAllUser(@RequestParam(name = "page",defaultValue = "0") int page,@RequestParam(name = "limit",defaultValue = "3") int limit ) {
-        Page<UserDTO> listUsers = userService.getAllUser(page,limit);
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Page<UserResponse> getAllUser(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "limit", defaultValue = "3") int limit) {
+        Page<UserDTO> listUsers = userService.getAllUser(page, limit);
         Page<UserResponse> returnValue = listUsers.map(userMapper::userDtoToUserResponse);
         return returnValue;
     }
 
-    @GetMapping(value = {"/{userId}"},produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = {"/{userId}"}, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserResponse getUser(@PathVariable String userId) {
         UserDTO findedUser = userService.getUser(userId);
         UserResponse returnValue = userMapper.userDtoToUserResponse(findedUser);

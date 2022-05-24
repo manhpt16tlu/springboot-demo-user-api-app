@@ -20,24 +20,24 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl implements UserService {
 
-//    @Autowired
-//    private UserMapper userMapper;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private GenerateString generateString;
-
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private GenerateString generateString;
 
-    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository, GenerateString generateString) {
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
-        this.generateString = generateString;
-    }
+//    private UserMapper userMapper;
+//    private UserRepository userRepository;
+//    private GenerateString generateString;
+//
+//    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository, GenerateString generateString) {
+//        this.userMapper = userMapper;
+//        this.userRepository = userRepository;
+//        this.generateString = generateString;
+//    }
     //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
