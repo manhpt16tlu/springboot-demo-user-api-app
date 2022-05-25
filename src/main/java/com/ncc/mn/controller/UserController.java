@@ -51,7 +51,7 @@ public class UserController {
         return returnValue;
     }
 
-    @GetMapping(value = {"/{userId}"}, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = {"/{userId}"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public UserResponse getUser(@PathVariable String userId) {
         UserDTO findedUser = userService.getUser(userId);
         UserResponse returnValue = userMapper.userDtoToUserResponse(findedUser);

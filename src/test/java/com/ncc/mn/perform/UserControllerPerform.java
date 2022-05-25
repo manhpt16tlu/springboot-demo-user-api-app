@@ -23,4 +23,11 @@ public class UserControllerPerform {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andReturn();
     }
+
+    public static MvcResult getUserRequestResult(MockMvc mockMvc,String endpoint) throws Exception{
+        return mockMvc.perform(MockMvcRequestBuilders
+                .get(endpoint,"123")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn();
+    }
 }
